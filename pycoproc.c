@@ -105,16 +105,16 @@ int pycoprocMagic(uint8_t Oper, uint16_t Addr, int Data) {
 		sPYCOPROC.sReg.sCmd._XOR = (Oper == pycoprocMAGIC_OP_TGL_BITS) ? (Data & 0xFF) : 0x00;
 		TxLen = 6;
 	}
-	IF_TT(debugMAGIC, "MAGIC: C=%d  A=0x%04X  D=0x%02X  [%-B]  ", Oper, Addr, Data, TxLen, sPYCOPROC.sReg.u8Cmd);
+	IF_PT(debugMAGIC, "MAGIC: C=%d  A=0x%04X  D=0x%02X  [%-B]  ", Oper, Addr, Data, TxLen, sPYCOPROC.sReg.u8Cmd);
 	halI2C_Queue(sPYCOPROC.psI2C, i2cW_B, sPYCOPROC.sReg.u8Cmd, TxLen, NULL, 0, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
 	pycoprocWait();
 	if (Oper == pycoprocMAGIC_OP_PEEK) {
 		uint8_t u8Buf[2];
 		halI2C_Queue(sPYCOPROC.psI2C, i2cR_B, NULL, 0, u8Buf, 2, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
-		IF_PRINT(debugMAGIC, "R=[%-B]\n", 2, u8Buf);
+		IF_P(debugMAGIC, "R=[%-B]\n", 2, u8Buf);
 		sPYCOPROC.sReg.sCmd._RESULT = u8Buf[1];
 	} else {
-		IF_PRINT(debugMAGIC, "\n");
+		IF_P(debugMAGIC, "\n");
 	}
 	return sPYCOPROC.sReg.sCmd._RESULT;
 }
@@ -143,7 +143,7 @@ int	pycoprocReadHdlr(epw_t * psEWP) {
 	// calculate actual voltage measured
 	X64.x32[0].f32 = ((((float) X64.x32[1].u32 * 3.3 * 280.0) / 1023) / 180.0) + 0.01;
 	vCV_SetValue(&psEWP->var, X64);
-	IF_TTL(debugCONVERT, " Raw=%d  Norm=%f\n", X64.x32[1].u32, X64.x32[0].f32);
+	IF_PTL(debugCONVERT, " Raw=%d  Norm=%f\n", X64.x32[1].u32, X64.x32[0].f32);
 	return erSUCCESS;
 }
 
@@ -165,7 +165,7 @@ int	pycoprocConfigMode (struct rule_t * psR, int Xcur, int Xmax) {
 	int gain = psR->para.x32[AI][0].i32;
 	int time = psR->para.x32[AI][1].i32;
 	int rate = psR->para.x32[AI][2].i32;
-	IF_PRINT(debugCONFIG && ioB1GET(ioMode), "mode 'PYCOPROC' Xcur=%d Xmax=%d gain=%d time=%d rate=%d\n", Xcur, Xmax, gain, time, rate);
+	IF_P(debugCONFIG && ioB1GET(ioMode), "mode 'PYCOPROC' Xcur=%d Xmax=%d gain=%d time=%d rate=%d\n", Xcur, Xmax, gain, time, rate);
 
 	if (OUTSIDE(0, gain, 7, int) || OUTSIDE(0, time, 7, int) || OUTSIDE(0, rate, 7, int) || gain==4 || gain==5) {
 		ERR_RETURN("Invalid gain / time / rate specified", erINVALID_PARA);
@@ -203,7 +203,7 @@ int	pycoprocIdentify(i2c_di_t * psI2C_DI) {
 	if (iRV != erSUCCESS)
 		goto exit;
 
-	IF_PRINT(debugCONFIG, "FW_VER=%d  HW_VER=%d  PROD_ID=%d\n", sPYCOPROC.sReg.u16FW_VER, sPYCOPROC.sReg.u16HW_VER, sPYCOPROC.sReg.u16PROD_ID);
+	IF_P(debugCONFIG, "FW_VER=%d  HW_VER=%d  PROD_ID=%d\n", sPYCOPROC.sReg.u16FW_VER, sPYCOPROC.sReg.u16HW_VER, sPYCOPROC.sReg.u16PROD_ID);
 	psI2C_DI->Type		= i2cDEV_PYCOPROC;
 	psI2C_DI->Speed		= i2cSPEED_400;
 	psI2C_DI->DevIdx 	= 0;

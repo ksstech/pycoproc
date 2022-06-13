@@ -111,10 +111,10 @@ int pycoprocMagic(uint8_t Oper, uint16_t Addr, int Data) {
 	if (Oper == pycoprocMAGIC_OP_PEEK) {
 		uint8_t u8Buf[2];
 		halI2C_Queue(sPYCOPROC.psI2C, i2cR_B, NULL, 0, u8Buf, 2, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
-		IF_P(debugMAGIC, "R=[%-B]\n", 2, u8Buf);
+		IF_P(debugMAGIC, "R=[%-B]\r\n", 2, u8Buf);
 		sPYCOPROC.sReg.sCmd._RESULT = u8Buf[1];
 	} else {
-		IF_P(debugMAGIC, "\n");
+		IF_P(debugMAGIC, "\r\n");
 	}
 	return sPYCOPROC.sReg.sCmd._RESULT;
 }
@@ -143,7 +143,7 @@ int	pycoprocReadHdlr(epw_t * psEWP) {
 	// calculate actual voltage measured
 	X64.x32[0].f32 = ((((float) X64.x32[1].u32 * 3.3 * 280.0) / 1023) / 180.0) + 0.01;
 	vCV_SetValue(&psEWP->var, X64);
-	IF_PTL(debugCONVERT, " Raw=%d  Norm=%f\n", X64.x32[1].u32, X64.x32[0].f32);
+	IF_PTL(debugCONVERT, " Raw=%d  Norm=%f\r\n", X64.x32[1].u32, X64.x32[0].f32);
 	return erSUCCESS;
 }
 
@@ -165,7 +165,7 @@ int	pycoprocConfigMode (struct rule_t * psR, int Xcur, int Xmax) {
 	int gain = psR->para.x32[AI][0].i32;
 	int time = psR->para.x32[AI][1].i32;
 	int rate = psR->para.x32[AI][2].i32;
-	IF_P(debugCONFIG && ioB1GET(ioMode), "mode 'PYCOPROC' Xcur=%d Xmax=%d gain=%d time=%d rate=%d\n", Xcur, Xmax, gain, time, rate);
+	IF_P(debugCONFIG && ioB1GET(ioMode), "mode 'PYCOPROC' Xcur=%d Xmax=%d gain=%d time=%d rate=%d\r\n", Xcur, Xmax, gain, time, rate);
 
 	if (OUTSIDE(0, gain, 7, int) ||
 		OUTSIDE(0, time, 7, int) ||
@@ -202,7 +202,7 @@ int	pycoprocIdentify(i2c_di_t * psI2C_DI) {
 	sPYCOPROC.sReg.u16PROD_ID = (sPYCOPROC.sReg.u8PROD_ID[1] << 8) | sPYCOPROC.sReg.u8PROD_ID[0];
 	IF_EXIT(iRV != erSUCCESS);
 
-	IF_P(debugCONFIG, "FW_VER=%d  HW_VER=%d  PROD_ID=%d\n", sPYCOPROC.sReg.u16FW_VER, sPYCOPROC.sReg.u16HW_VER, sPYCOPROC.sReg.u16PROD_ID);
+	IF_P(debugCONFIG, "FW_VER=%d  HW_VER=%d  PROD_ID=%d\r\n", sPYCOPROC.sReg.u16FW_VER, sPYCOPROC.sReg.u16HW_VER, sPYCOPROC.sReg.u16PROD_ID);
 	psI2C_DI->Type		= i2cDEV_PYCOPROC;
 	psI2C_DI->Speed		= i2cSPEED_400;
 	psI2C_DI->DevIdx 	= 0;

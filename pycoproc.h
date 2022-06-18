@@ -1,10 +1,8 @@
 /*
- * Copyright 2022 Andre M. Maree/KSS Technologies (Pty) Ltd.
+ * Copyright (c) 2022 Andre M. Maree/KSS Technologies (Pty) Ltd.
  */
 
 #pragma once
-
-#include <stdint.h>
 
 #include "endpoint_struct.h"
 #include "hal_i2c.h"
@@ -117,7 +115,7 @@ typedef struct __attribute__((packed)) {
 } pycoproc_reg_t;
 DUMB_STATIC_ASSERT(sizeof(pycoproc_reg_t) == 12);
 
-typedef struct __attribute__((packed)) {				// SI70006/13/14/20/xx TMP & RH sensors
+typedef struct {					// SI70006/13/14/20/xx TMP & RH sensors
 	i2c_di_t *		psI2C;			// 4 bytes
 	SemaphoreHandle_t mux;
 	union {

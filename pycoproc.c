@@ -41,9 +41,9 @@ pycoproc_t sPYCOPROC = { 0 };
 
 // #################################### Local ONLY functions #######################################
 
-uint8_t pycoprocWait(void) {
+u8_t pycoprocWait(void) {
 	int Count = 0;
-	uint8_t Status;
+	u8_t Status;
 	i64TaskDelayUsec(10);
 	while(1) {
 		halI2C_Queue(sPYCOPROC.psI2C, i2cR_B, NULL, 0, &Status, 1, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
@@ -58,7 +58,7 @@ uint8_t pycoprocWait(void) {
 	return Status;
 }
 
-int pycoprocRead16(uint8_t Reg, uint8_t * pRxBuf) {
+int pycoprocRead16(u8_t Reg, u8_t * pRxBuf) {
 	xRtosSemaphoreTake(&sPYCOPROC.mux, portMAX_DELAY);
 	IF_SYSTIMER_START(debugTIMING, stPYCOPROC);
 	int iRV = halI2C_Queue(sPYCOPROC.psI2C, i2cWR_B, &Reg, sizeof(Reg),
@@ -69,8 +69,8 @@ int pycoprocRead16(uint8_t Reg, uint8_t * pRxBuf) {
 }
 
 /*
-int pycoprocWriteMemory(uint16_t Addr, uint8_t Data) {
-	uint8_t u8Buf[4] ;
+int pycoprocWriteMemory(uint16_t Addr, u8_t Data) {
+	u8_t u8Buf[4] ;
 	u8Buf[0] = pycoprocCMD_POKE;
 	u8Buf[1] = (Addr & 0xFF);
 	u8Buf[2] = (Addr >> 8) & 0xFF;
@@ -85,7 +85,7 @@ int pycoprocWriteMemory(uint16_t Addr, uint8_t Data) {
 }
 */
 
-int pycoprocMagic(uint8_t Oper, uint16_t Addr, int Data) {
+int pycoprocMagic(u8_t Oper, uint16_t Addr, int Data) {
 	size_t TxLen;
 	Data &= 0xFF;
 	sPYCOPROC.sReg.sCmd.ADDRL = (Addr & 0xFF);
@@ -108,7 +108,7 @@ int pycoprocMagic(uint8_t Oper, uint16_t Addr, int Data) {
 	halI2C_Queue(sPYCOPROC.psI2C, i2cW_B, sPYCOPROC.sReg.u8Cmd, TxLen, NULL, 0, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
 	pycoprocWait();
 	if (Oper == pycoprocMAGIC_OP_PEEK) {
-		uint8_t u8Buf[2];
+		u8_t u8Buf[2];
 		halI2C_Queue(sPYCOPROC.psI2C, i2cR_B, NULL, 0, u8Buf, 2, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
 		IF_P(debugMAGIC, "R=[%-B]\r\n", 2, u8Buf);
 		sPYCOPROC.sReg.sCmd._RESULT = u8Buf[1];
@@ -160,7 +160,7 @@ int	pycoprocReadHdlr(epw_t * psEWP) {
 
 int	pycoprocConfigMode (struct rule_t * psR, int Xcur, int Xmax) {
 	// mode /pycoproc idx gain time rate
-	uint8_t	AI = psR->ActIdx;
+	u8_t	AI = psR->ActIdx;
 	int gain = psR->para.x32[AI][0].i32;
 	int time = psR->para.x32[AI][1].i32;
 	int rate = psR->para.x32[AI][2].i32;

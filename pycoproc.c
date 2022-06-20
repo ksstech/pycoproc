@@ -1,17 +1,16 @@
 /*
- * Copyright 2022 Andre M. Maree/KSS Technologies (Pty) Ltd.
+ * pycoproc.c
+ * Copyright (c) 2022 Andre M. Maree / KSS Technologies (Pty) Ltd.
  */
 
-#include	<string.h>
-
-#include	"pycoproc.h"
-#include	"hal_variables.h"
-#include	"endpoints.h"
-#include	"options.h"
-#include	"printfx.h"
-#include	"syslog.h"
-#include	"systiming.h"
-#include	"x_errors_events.h"
+#include "pycoproc.h"
+#include "hal_variables.h"
+#include "endpoints.h"
+#include "options.h"
+#include "printfx.h"
+#include "syslog.h"
+#include "systiming.h"
+#include "x_errors_events.h"
 
 #define	debugFLAG					0xF000
 

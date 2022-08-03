@@ -166,9 +166,9 @@ int	pycoprocConfigMode (struct rule_t * psR, int Xcur, int Xmax) {
 	int rate = psR->para.x32[AI][2].i32;
 	IF_P(debugCONFIG && ioB1GET(ioMode), "mode 'PYCOPROC' Xcur=%d Xmax=%d gain=%d time=%d rate=%d\r\n", Xcur, Xmax, gain, time, rate);
 
-	if (OUTSIDE(0, gain, 7, int) ||
-		OUTSIDE(0, time, 7, int) ||
-		OUTSIDE(0, rate, 7, int) ||
+	if (OUTSIDE(0, gain, 7) ||
+		OUTSIDE(0, time, 7) ||
+		OUTSIDE(0, rate, 7) ||
 		gain==4 || gain==5) {
 		RETURN_MX("Invalid gain / time / rate specified", erINVALID_PARA);
 	}

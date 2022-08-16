@@ -113,7 +113,7 @@ int pycoprocMagic(u8_t Oper, uint16_t Addr, int Data) {
 		IF_P(debugMAGIC, "R=[%-B]\r\n", 2, u8Buf);
 		sPYCOPROC.sReg.sCmd._RESULT = u8Buf[1];
 	} else {
-		IF_P(debugMAGIC, "\r\n");
+		IF_P(debugMAGIC, strCRLF);
 	}
 	return sPYCOPROC.sReg.sCmd._RESULT;
 }

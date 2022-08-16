@@ -141,7 +141,7 @@ int	pycoprocReadHdlr(epw_t * psEWP) {
 	xRtosSemaphoreGive(&sPYCOPROC.mux);
 	// calculate actual voltage measured
 	X64.x32[0].f32 = ((((float) X64.x32[1].u32 * 3.3 * 280.0) / 1023) / 180.0) + 0.01;
-	vCV_SetValue(&psEWP->var, X64);
+	vCV_SetValueRaw(&psEWP->var, X64);
 	IF_PTL(debugCONVERT, " Raw=%d  Norm=%f\r\n", X64.x32[1].u32, X64.x32[0].f32);
 	return erSUCCESS;
 }
@@ -170,7 +170,7 @@ int	pycoprocConfigMode (struct rule_t * psR, int Xcur, int Xmax) {
 		OUTSIDE(0, time, 7) ||
 		OUTSIDE(0, rate, 7) ||
 		gain==4 || gain==5) {
-		RETURN_MX("Invalid gain / time / rate specified", erINVALID_PARA);
+		RETURN_MX("Invalid gain / time / rate specified", erINV_PARA);
 	}
 	// Add actual MODE support here
 	return erSUCCESS;
@@ -227,16 +227,13 @@ int	pycoprocConfig(i2c_di_t * psI2C_DI) {
 	pycoprocMagic(pycoprocMAGIC_OP_CLR_BITS, pycoprocADDR_TRISC, ~(1 << 7));
 
 	epw_t * psEWP = &table_work[URI_PYCOPROC];
-	psEWP->var.def.cv.vc = 1;
-	psEWP->var.def.cv.vs = vs32B;
-	psEWP->var.def.cv.vf = vfFXX;
-	psEWP->var.def.cv.vt = vtVALUE;
+	psEWP->var.def = SETDEF_CVAR(0, 0, vtVALUE, cvF32, 1);
 	psEWP->Tsns = psEWP->Rsns = PYCOPROC_T_SNS;
 	psEWP->uri = URI_PYCOPROC;
 
-#if (pycoprocI2C_LOGIC == 3)
+	#if (pycoprocI2C_LOGIC == 3)
 	sPYCOPROC.timer = xTimerCreate("pycoproc", pdMS_TO_TICKS(5), pdFALSE, NULL, pycoprocTimerHdlr);
-#endif
+	#endif
 	IF_SYSTIMER_INIT(debugTIMING, stPYCOPROC, stMICROS, "PyCoProc", 100, 5000);
 	return erSUCCESS ;
 }

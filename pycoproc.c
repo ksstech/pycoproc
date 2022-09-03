@@ -25,9 +25,6 @@
 
 // ############################################ Macros #############################################
 
-#define	pycoprocI2C_LOGIC			1					// 0 = delay, 1= stretch, 2= stages
-#define	pycoprocADDR				0x08
-#define	PYCOPROC_T_SNS				10000
 
 // ################################ Forward function declaration ###################################
 
@@ -164,7 +161,7 @@ int	pycoprocConfigMode (struct rule_t * psR, int Xcur, int Xmax) {
 	int gain = psR->para.x32[AI][0].i32;
 	int time = psR->para.x32[AI][1].i32;
 	int rate = psR->para.x32[AI][2].i32;
-	IF_P(debugCONFIG && ioB1GET(ioMode), "mode 'PYCOPROC' Xcur=%d Xmax=%d gain=%d time=%d rate=%d\r\n", Xcur, Xmax, gain, time, rate);
+	IF_P(debugCONFIG && ioB1GET(dbgMode), "mode 'PYCOPROC' Xcur=%d Xmax=%d gain=%d time=%d rate=%d\r\n", Xcur, Xmax, gain, time, rate);
 
 	if (OUTSIDE(0, gain, 7) ||
 		OUTSIDE(0, time, 7) ||
@@ -232,7 +229,7 @@ int	pycoprocConfig(i2c_di_t * psI2C_DI) {
 	psEWP->uri = URI_PYCOPROC;
 
 	#if (pycoprocI2C_LOGIC == 3)
-	sPYCOPROC.timer = xTimerCreate("pycoproc", pdMS_TO_TICKS(5), pdFALSE, NULL, pycoprocTimerHdlr);
+	sPYCOPROC.th = xTimerCreateStatic("pycoproc", pdMS_TO_TICKS(5), pdFALSE, NULL, pycoprocTimerHdlr, &sPYCOPROC.ts );
 	#endif
 	IF_SYSTIMER_INIT(debugTIMING, stPYCOPROC, stMICROS, "PyCoProc", 100, 5000);
 	return erSUCCESS ;

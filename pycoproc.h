@@ -13,6 +13,9 @@
 
 // ########################################### Macros ##############################################
 
+#define	pycoprocI2C_LOGIC			1					// 0 = delay, 1= stretch, 2= stages
+#define	pycoprocADDR				0x08
+#define	PYCOPROC_T_SNS				10000
 #define	EXP_RTC_PERIOD				7000
 
 // ######################################## Enumerations ###########################################
@@ -118,12 +121,20 @@ DUMB_STATIC_ASSERT(sizeof(pycoproc_reg_t) == 12);
 typedef struct {					// SI70006/13/14/20/xx TMP & RH sensors
 	i2c_di_t *		psI2C;			// 4 bytes
 	SemaphoreHandle_t mux;
+	#if (pycoprocI2C_LOGIC == 3)
+	TimerHandle_t th;
+	StaticTimer_t ts;
+	#endif
 	union {
 		pycoproc_reg_t sReg;
 		uint8_t u8Reg[sizeof(pycoproc_reg_t)];
 	};
 } pycoproc_t;
-DUMB_STATIC_ASSERT(sizeof(pycoproc_t) == 20);
+#if (pycoprocI2C_LOGIC == 1)
+	DUMB_STATIC_ASSERT(sizeof(pycoproc_t) == 20);
+#elif (pycoprocI2C_LOGIC == 3)
+	DUMB_STATIC_ASSERT(sizeof(pycoproc_t) == 64);
+#endif
 
 // ###################################### Public variables #########################################
 

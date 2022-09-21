@@ -107,7 +107,7 @@ int pycoprocMagic(u8_t Oper, uint16_t Addr, int Data) {
 	if (Oper == pycoprocMAGIC_OP_PEEK) {
 		u8_t u8Buf[2];
 		halI2C_Queue(sPYCOPROC.psI2C, i2cR_B, NULL, 0, u8Buf, 2, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
-		IF_P(debugMAGIC, "R=[%-B]\r\n", 2, u8Buf);
+		IF_PX(debugMAGIC, "R=[%-B]\r\n", 2, u8Buf);
 		sPYCOPROC.sReg.sCmd._RESULT = u8Buf[1];
 	} else {
 		IF_P(debugMAGIC, strCRLF);

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "endpoint_struct.h"
+#include "endpoints.h"
 #include "hal_i2c.h"
 
 #ifdef __cplusplus

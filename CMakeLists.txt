@@ -2,8 +2,8 @@
 set( srcs "pycoproc.c" )
 set( include_dirs "." )
 set( priv_include_dirs )
-set( requires driver )
-set( priv_requires hal_esp32 main printfx syslog systiming )
+set( requires )
+set( priv_requires hal_esp32 printfx syslog systiming )
 
 idf_component_register(
 	SRCS ${srcs} 

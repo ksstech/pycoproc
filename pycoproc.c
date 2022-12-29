@@ -4,6 +4,7 @@
  */
 
 #include "hal_variables.h"
+#if (halHAS_PYCOPROC > 0)
 #include "pycoproc.h"
 #include "endpoints.h"
 #include "printfx.h"
@@ -244,3 +245,4 @@ int	pycoprocDiags(i2c_di_t * psI2C_DI) { return erSUCCESS; }
 void pycoprocReportAll(void) {
 	halI2C_DeviceReport(sPYCOPROC.psI2C);
 }
+#endif

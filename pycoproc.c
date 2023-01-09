@@ -3,7 +3,7 @@
  * Copyright (c) 2022 Andre M. Maree / KSS Technologies (Pty) Ltd.
  */
 
-#include "hal_variables.h"
+#include "main.h"
 #if (halHAS_PYCOPROC > 0)
 #include "pycoproc.h"
 #include "endpoints.h"

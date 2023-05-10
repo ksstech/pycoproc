@@ -5,7 +5,7 @@
 #pragma once
 
 #include "endpoints.h"
-#include "hal_i2c.h"
+#include "hal_i2cm.h"
 
 #ifdef __cplusplus
 	extern "C" {
@@ -151,7 +151,7 @@ struct rule_t ;
 int	pycoprocConfigMode (struct rule_t *, int Xcur, int Xmax);
 
 struct epw_t ;
-int	pycoprocReadHdlr(epw_t * psEWP);
+int	pycoprocSense(epw_t * psEWP);
 
 #ifdef __cplusplus
 	}

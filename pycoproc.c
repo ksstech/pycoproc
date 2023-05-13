@@ -221,7 +221,7 @@ int	pycoprocConfig(i2c_di_t * psI2C_DI) {
 	pycoprocMagic(pycoprocMAGIC_OP_CLR_BITS, pycoprocADDR_TRISC, ~(1 << 7));
 
 	epw_t * psEWP = &table_work[URI_PYCOPROC];
-	psEWP->var.def = SETDEF_CVAR(0, 0, vtVALUE, cvF32, 1);
+	psEWP->var.def = SETDEF_CVAR(0, 0, vtVALUE, cvF32, 1, 0);
 	psEWP->Tsns = psEWP->Rsns = PYCOPROC_T_SNS;
 	psEWP->uri = URI_PYCOPROC;
 

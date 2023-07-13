@@ -238,10 +238,10 @@ int	pycoprocDiags(i2c_di_t * psI2C_DI) { return erSUCCESS; }
 
 // ######################################### Reporting #############################################
 
-void pycoprocReportAll(void) {
-	halI2C_DeviceReport(sPYCOPROC.psI2C);
+int pycoprocReportAll(report_t * psR) {
+	int iRV = halI2C_DeviceReport(psR, psRsPYCOPROC.psI2C);
 	#if (pycoprocI2C_LOGIC == 3)
-	xRtosReportTimer(NULL, sPYCOPROC.th);
+	iRV += xRtosReportTimer(psR, sPYCOPROC.th);
 	#endif
 }
 #endif

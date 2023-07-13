@@ -145,12 +145,12 @@ int	pycoprocIdentify(i2c_di_t * psI2C_DI);
 int	pycoprocConfig(i2c_di_t * psI2C_DI);
 int	pycoprocReConfig(i2c_di_t * psI2C_DI);
 int	pycoprocDiags(i2c_di_t * psI2C_DI);
-void pycoprocReportAll(void) ;
+void pycoprocReportAll(report_t * psR);
 
-struct rule_t ;
+struct rule_t;
 int	pycoprocConfigMode (struct rule_t *, int Xcur, int Xmax);
 
-struct epw_t ;
+struct epw_t;
 int	pycoprocSense(epw_t * psEWP);
 
 #ifdef __cplusplus

@@ -185,7 +185,7 @@ int	pycoprocIdentify(i2c_di_t * psI2C_DI) {
 	int iRV = pycoprocRead16(pycoprocCMD_FW_VER, sPYCOPROC.sReg.u8FW_VER);
 	sPYCOPROC.sReg.u16FW_VER = (sPYCOPROC.sReg.u8FW_VER[1] << 8) | sPYCOPROC.sReg.u8FW_VER[0];
 	IF_EXIT(iRV != erSUCCESS);
-	IF_GOTO(sPYCOPROC.sReg.u16FW_VER < 6, exit_err);
+	IF_GOTO_L(sPYCOPROC.sReg.u16FW_VER < 6, exit_err);
 
 	iRV = pycoprocRead16(pycoprocCMD_HW_VER, sPYCOPROC.sReg.u8HW_VER);
 	sPYCOPROC.sReg.u16HW_VER = (sPYCOPROC.sReg.u8HW_VER[1] << 8) | sPYCOPROC.sReg.u8HW_VER[0];

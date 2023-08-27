@@ -4,8 +4,8 @@
 
 #pragma once
 
+#include "hal_i2c_common.h"
 #include "endpoints.h"
-#include "hal_i2cm.h"
 
 #ifdef __cplusplus
 	extern "C" {

@@ -141,10 +141,10 @@ typedef struct {					// SI70006/13/14/20/xx TMP & RH sensors
 
 // ###################################### Public functions #########################################
 
-int	pycoprocIdentify(i2c_di_t * psI2C_DI);
-int	pycoprocConfig(i2c_di_t * psI2C_DI);
-int	pycoprocReConfig(i2c_di_t * psI2C_DI);
-int	pycoprocDiags(i2c_di_t * psI2C_DI);
+int	pycoprocIdentify(i2c_di_t * psI2C);
+int	pycoprocConfig(i2c_di_t * psI2C);
+int	pycoprocReConfig(i2c_di_t * psI2C);
+int	pycoprocDiags(i2c_di_t * psI2C);
 int pycoprocReportAll(report_t * psR);
 
 struct rule_t;

@@ -176,11 +176,11 @@ int	pycoprocConfigMode (struct rule_t * psR, int Xcur, int Xmax) {
  * device reset+register reads to ascertain exact device type
  * @return	erSUCCESS if supported device was detected, if not erFAILURE
  */
-int	pycoprocIdentify(i2c_di_t * psI2C_DI) {
-	psI2C_DI->TRXmS	= 50;
-	psI2C_DI->CLKuS = 400;
-	psI2C_DI->Test = 1;
-	sPYCOPROC.psI2C = psI2C_DI;
+int	pycoprocIdentify(i2c_di_t * psI2C) {
+	psI2C->TRXmS = 50;
+	psI2C->CLKuS = 400;
+	psI2C->Test = 1;
+	sPYCOPROC.psI2C = psI2C;
 
 	int iRV = pycoprocRead16(pycoprocCMD_FW_VER, sPYCOPROC.sReg.u8FW_VER);
 	sPYCOPROC.sReg.u16FW_VER = (sPYCOPROC.sReg.u8FW_VER[1] << 8) | sPYCOPROC.sReg.u8FW_VER[0];
@@ -196,18 +196,27 @@ int	pycoprocIdentify(i2c_di_t * psI2C_DI) {
 	IF_EXIT(iRV != erSUCCESS);
 
 	IF_P(debugTRACK && ioB1GET(ioI2Cinit), "FW_VER=%d  HW_VER=%d  PROD_ID=%d\r\n", sPYCOPROC.sReg.u16FW_VER, sPYCOPROC.sReg.u16HW_VER, sPYCOPROC.sReg.u16PROD_ID);
-	psI2C_DI->Type		= i2cDEV_PYCOPROC;
-	psI2C_DI->Speed		= i2cSPEED_400;
-	psI2C_DI->DevIdx 	= 0;
+	psI2C->Type	= i2cDEV_PYCOPROC;
+	psI2C->Speed = i2cSPEED_400;
+	psI2C->DevIdx = 0;
 	goto exit;
 exit_err:
 	iRV = erFAILURE;
 exit:
-	psI2C_DI->Test = 0;
+	psI2C->Test = 0;
 	return iRV ;
 }
 
-int	pycoprocConfig(i2c_di_t * psI2C_DI) {
+int	pycoprocConfig(i2c_di_t * psI2C) {
+	pycoprocReConfig(psI2C);
+	#if (pycoprocI2C_LOGIC == 3)
+	sPYCOPROC.th = xTimerCreateStatic("pycoproc", pdMS_TO_TICKS(5), pdFALSE, NULL, pycoprocTimerHdlr, &sPYCOPROC.ts );
+	#endif
+	IF_SYSTIMER_INIT(debugTIMING, stPYCOPROC, stMICROS, "PyCoProc", 100, 5000);
+	return erSUCCESS ;
+}
+
+int pycoprocReConfig(i2c_di_t * psI2C) {
 	// init ADC for battery measurement
 	pycoprocMagic(pycoprocMAGIC_OP_POKE, pycoprocADDR_ANSELC, 1 << 2);
 	pycoprocMagic(pycoprocMAGIC_OP_POKE, pycoprocADDR_ADCON0, (0x06 << pycoproc_ADCON0_CHS_POSN) | pycoprocADCON0_ADON_MASK);
@@ -224,17 +233,10 @@ int	pycoprocConfig(i2c_di_t * psI2C_DI) {
 	psEWP->var.def = SETDEF_CVAR(0, 0, vtVALUE, cvF32, 1, 0);
 	psEWP->Tsns = psEWP->Rsns = PYCOPROC_T_SNS;
 	psEWP->uri = URI_PYCOPROC;
-
-	#if (pycoprocI2C_LOGIC == 3)
-	sPYCOPROC.th = xTimerCreateStatic("pycoproc", pdMS_TO_TICKS(5), pdFALSE, NULL, pycoprocTimerHdlr, &sPYCOPROC.ts );
-	#endif
-	IF_SYSTIMER_INIT(debugTIMING, stPYCOPROC, stMICROS, "PyCoProc", 100, 5000);
-	return erSUCCESS ;
+	return erSUCCESS;
 }
 
-int pycoprocReConfig(i2c_di_t * psI2C_DI) { return erSUCCESS; }
-
-int	pycoprocDiags(i2c_di_t * psI2C_DI) { return erSUCCESS; }
+int	pycoprocDiags(i2c_di_t * psI2C) { return erSUCCESS; }
 
 // ######################################### Reporting #############################################
 

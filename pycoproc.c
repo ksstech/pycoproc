@@ -44,7 +44,7 @@ u8_t pycoprocWait(void) {
 	u8_t Status;
 	i64TaskDelayUsec(10);
 	while(1) {
-		halI2CM_Queue(sPYCOPROC.psI2C, i2cR_B, NULL, 0, &Status, 1, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
+		halI2C_Queue(sPYCOPROC.psI2C, i2cR_B, NULL, 0, &Status, 1, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
 		if (Status == 0xFF)
 			break;
 		if (++Count > 500) {
@@ -59,7 +59,7 @@ u8_t pycoprocWait(void) {
 int pycoprocRead16(u8_t Reg, u8_t * pRxBuf) {
 	xRtosSemaphoreTake(&sPYCOPROC.mux, portMAX_DELAY);
 	IF_SYSTIMER_START(debugTIMING, stPYCOPROC);
-	int iRV = halI2CM_Queue(sPYCOPROC.psI2C, i2cWR_B, &Reg, sizeof(Reg),
+	int iRV = halI2C_Queue(sPYCOPROC.psI2C, i2cWR_B, &Reg, sizeof(Reg),
 			pRxBuf, sizeof(uint16_t), (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
 	IF_SYSTIMER_STOP(debugTIMING, stPYCOPROC);
 	xRtosSemaphoreGive(&sPYCOPROC.mux);
@@ -75,7 +75,7 @@ int pycoprocWriteMemory(uint16_t Addr, u8_t Data) {
 	u8Buf[3] = Data;
 	xRtosSemaphoreTake(&sPYCOPROC.mux, portMAX_DELAY);
 	IF_SYSTIMER_START(debugTIMING, stPYCOPROC);
-	int iRV = halI2CM_Queue(sPYCOPROC.psI2C, i2cW_B, u8Buf, sizeof(u8Buf),
+	int iRV = halI2C_Queue(sPYCOPROC.psI2C, i2cW_B, u8Buf, sizeof(u8Buf),
 			NULL, 0, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
 	IF_SYSTIMER_STOP(debugTIMING, stPYCOPROC);
 	xRtosSemaphoreGive(&sPYCOPROC.mux);
@@ -103,11 +103,11 @@ int pycoprocMagic(u8_t Oper, uint16_t Addr, int Data) {
 		TxLen = 6;
 	}
 	IF_PT(debugDEVICE, "MAGIC: C=%d  A=0x%04X  D=0x%02X  [%-B]  ", Oper, Addr, Data, TxLen, sPYCOPROC.sReg.u8Cmd);
-	halI2CM_Queue(sPYCOPROC.psI2C, i2cW_B, sPYCOPROC.sReg.u8Cmd, TxLen, NULL, 0, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
+	halI2C_Queue(sPYCOPROC.psI2C, i2cW_B, sPYCOPROC.sReg.u8Cmd, TxLen, NULL, 0, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
 	pycoprocWait();
 	if (Oper == pycoprocMAGIC_OP_PEEK) {
 		u8_t u8Buf[2];
-		halI2CM_Queue(sPYCOPROC.psI2C, i2cR_B, NULL, 0, u8Buf, 2, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
+		halI2C_Queue(sPYCOPROC.psI2C, i2cR_B, NULL, 0, u8Buf, 2, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
 		IF_PX(debugDEVICE, "R=[%-B]\r\n", 2, u8Buf);
 		sPYCOPROC.sReg.sCmd._RESULT = u8Buf[1];
 	} else {

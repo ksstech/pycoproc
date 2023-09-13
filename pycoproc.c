@@ -1,14 +1,11 @@
 /*
- * pycoproc.c
- * Copyright (c) 2022 Andre M. Maree / KSS Technologies (Pty) Ltd.
+ * pycoproc.c - Copyright (c) 2022-23 Andre M. Maree / KSS Technologies (Pty) Ltd.
  */
 
-#include "hal_config.h"
+#include "hal_variables.h"
 
 #if (halHAS_PYCOPROC > 0)
-#include "pycoproc.h"
-#include "endpoints.h"
-#include "options.h"
+#include "hal_i2c_common.h"
 #include "printfx.h"
 #include "rules.h"
 #include "syslog.h"
@@ -208,12 +205,11 @@ exit:
 }
 
 int	pycoprocConfig(i2c_di_t * psI2C) {
-	pycoprocReConfig(psI2C);
+	IF_SYSTIMER_INIT(debugTIMING, stPYCOPROC, stMICROS, "PyCoProc", 100, 5000);
 	#if (pycoprocI2C_LOGIC == 3)
 	sPYCOPROC.th = xTimerCreateStatic("pycoproc", pdMS_TO_TICKS(5), pdFALSE, NULL, pycoprocTimerHdlr, &sPYCOPROC.ts );
 	#endif
-	IF_SYSTIMER_INIT(debugTIMING, stPYCOPROC, stMICROS, "PyCoProc", 100, 5000);
-	return erSUCCESS ;
+	return pycoprocReConfig(psI2C);
 }
 
 int pycoprocReConfig(i2c_di_t * psI2C) {
@@ -233,6 +229,7 @@ int pycoprocReConfig(i2c_di_t * psI2C) {
 	psEWP->var.def = SETDEF_CVAR(0, 0, vtVALUE, cvF32, 1, 0);
 	psEWP->Tsns = psEWP->Rsns = PYCOPROC_T_SNS;
 	psEWP->uri = URI_PYCOPROC;
+	xRtosSetDevice(devMASK_PYCOPROC);
 	return erSUCCESS;
 }
 

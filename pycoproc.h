@@ -1,11 +1,8 @@
 /*
- * Copyright (c) 2022-23 Andre M. Maree/KSS Technologies (Pty) Ltd.
+ * pycoproc.h - Copyright (c) 2022-23 Andre M. Maree/KSS Technologies (Pty) Ltd.
  */
 
 #pragma once
-
-#include "hal_i2c_common.h"
-#include "endpoints.h"
 
 #ifdef __cplusplus
 	extern "C" {
@@ -151,7 +148,7 @@ struct rule_t;
 int	pycoprocConfigMode (struct rule_t *, int Xcur, int Xmax);
 
 struct epw_t;
-int	pycoprocSense(epw_t * psEWP);
+int	pycoprocSense(struct epw_t * psEWP);
 
 #ifdef __cplusplus
 	}

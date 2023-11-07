@@ -81,42 +81,43 @@ enum {
 
 typedef struct __attribute__((packed)) {				// MAGIC command structure
 	union {
-		uint8_t CMD;
-		uint8_t _RESULT;
+		u8_t CMD;
+		u8_t _RESULT;
 	};
-	uint8_t ADDRL;
-	uint8_t ADDRH;
+	u8_t ADDRL;
+	u8_t ADDRH;
 	union {
-		uint8_t _DATA;
-		uint8_t _AND;
+		u8_t _DATA;
+		u8_t _AND;
 	};
-	uint8_t _OR;
-	uint8_t _XOR;
+	u8_t _OR;
+	u8_t _XOR;
 } pycoproc_cmd_t;
 DUMB_STATIC_ASSERT(sizeof(pycoproc_cmd_t) == 6);
 
 typedef struct __attribute__((packed)) {
 	union {
 		pycoproc_cmd_t sCmd;
-		uint8_t u8Cmd[sizeof(pycoproc_cmd_t)];
+		u8_t u8Cmd[sizeof(pycoproc_cmd_t)];
 	};
 	union {							// HW_VER
-		uint16_t	u16HW_VER;
-		uint8_t		u8HW_VER[2];
+		u16_t u16HW_VER;
+		u8_t u8HW_VER[2];
 	};
 	union {							// FW_VER
-		uint16_t	u16FW_VER;
-		uint8_t		u8FW_VER[2];
+		u16_t u16FW_VER;
+		u8_t u8FW_VER[2];
 	};
 	union {							// PROD_ID
-		uint16_t	u16PROD_ID;
-		uint8_t		u8PROD_ID[2];
+		u16_t u16PROD_ID;
+		u8_t u8PROD_ID[2];
 	};
 } pycoproc_reg_t;
 DUMB_STATIC_ASSERT(sizeof(pycoproc_reg_t) == 12);
 
+struct i2c_di_t;
 typedef struct {					// SI70006/13/14/20/xx TMP & RH sensors
-	i2c_di_t *		psI2C;			// 4 bytes
+	struct i2c_di_t * psI2C;		// 4 bytes
 	SemaphoreHandle_t mux;
 	#if (pycoprocI2C_LOGIC == 3)
 	TimerHandle_t th;
@@ -124,7 +125,7 @@ typedef struct {					// SI70006/13/14/20/xx TMP & RH sensors
 	#endif
 	union {
 		pycoproc_reg_t sReg;
-		uint8_t u8Reg[sizeof(pycoproc_reg_t)];
+		u8_t u8Reg[sizeof(pycoproc_reg_t)];
 	};
 } pycoproc_t;
 #if (pycoprocI2C_LOGIC == 1)
@@ -135,20 +136,18 @@ typedef struct {					// SI70006/13/14/20/xx TMP & RH sensors
 
 // ###################################### Public variables #########################################
 
+extern pycoproc_t sPCP;
 
 // ###################################### Public functions #########################################
 
-int	pycoprocIdentify(i2c_di_t * psI2C);
-int	pycoprocConfig(i2c_di_t * psI2C);
-int	pycoprocReConfig(i2c_di_t * psI2C);
-int	pycoprocDiags(i2c_di_t * psI2C);
-int pycoprocReportAll(report_t * psR);
+int pycoprocMagic(u8_t Oper, u16_t Addr, int Data);
 
-struct rule_t;
-int	pycoprocConfigMode (struct rule_t *, int Xcur, int Xmax);
-
-struct epw_t;
-int	pycoprocSense(struct epw_t * psEWP);
+int	pycoprocIdentify(struct i2c_di_t * psI2C);
+int	pycoprocConfig(struct i2c_di_t * psI2C);
+int	pycoprocReConfig(struct i2c_di_t * psI2C);
+int	pycoprocDiags(struct i2c_di_t * psI2C);
+struct report_t;
+int pycoprocReportAll(struct report_t * psR);
 
 #ifdef __cplusplus
 	}

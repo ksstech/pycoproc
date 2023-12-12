@@ -5,7 +5,7 @@
 #pragma once
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
 // ########################################### Macros ##############################################
@@ -150,5 +150,5 @@ struct report_t;
 int pycoprocReportAll(struct report_t * psR);
 
 #ifdef __cplusplus
-	}
+}
 #endif

@@ -3,7 +3,7 @@ set( srcs "pycoproc.c" )
 set( include_dirs "." )
 set( priv_include_dirs )
 set( requires )
-set( priv_requires "endpoints hal_esp32 main printfx syslog systiming" )
+set( priv_requires )
 
 idf_component_register(
 	SRCS ${srcs}

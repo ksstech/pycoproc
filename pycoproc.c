@@ -5,7 +5,7 @@
 #if (HAL_PYCOPROC > 0)
 #include "endpoints.h"
 #include "hal_i2c_common.h"
-#include "printfx.h"
+#include "report.h"
 #include "pycoproc.h"
 #include "rules.h"
 #include "syslog.h"
